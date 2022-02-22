@@ -23,9 +23,28 @@ const app = createApp({
             this.productId = id;
             this.$refs.productModal.openModal();
         },
+        getCart() {
+            axios.get(`${apiUrl}/v2/api/${apiPath}/cart`)
+            .then((res) => {
+              console.log(res);
+              this.cartData = res.data.data;
+            })
+        },
+        addToCart(id, qty = 1) {
+            const data = {
+                product_id: id,
+                qty,
+            }
+            axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, { data })
+            .then((res) => {
+              console.log(res);
+              this.getCart();
+            })
+        }
     },
     mounted() {
         this.getProducts();
+        this.getCart();
     },
 });
 //先把modal打開 在取得遠端資料
