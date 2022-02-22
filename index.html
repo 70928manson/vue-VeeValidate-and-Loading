@@ -18,7 +18,7 @@
       <div class="container">
         <div class="mt-4">
           <!-- 產品Modal -->
-          
+          <product-modal :id="productId" ref="productModal"></product-modal>
           <!-- 產品Modal -->
          
           <table class="table align-middle">
@@ -31,21 +31,28 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="product in products" :key="product.id">
                 <td style="width: 200px">
-                  <div style="height: 100px; background-size: cover; background-position: center"></div>
+                  <div 
+                    :style="{ backgroundImage: `url(${product.imageUrl})` }" 
+                    style="height: 100px; background-size: cover; background-position: center"></div>
                 </td>
                 <td>
-                  {{  }}
+                  {{ product.title }}
                 </td>
                 <td>
-                  <div class="h5">{{  }} 元</div>
-                  <del class="h6">原價 {{  }} 元</del>
-                  <div class="h5">現在只要 {{  }} 元</div>
+                  <div class="h5" v-if="product.price === product.origin_price">
+                    {{ product.price }} 元
+                  </div>
+                  <div v-else>
+                    <del class="h6">原價 {{ product.origin_price }} 元</del>
+                    <div class="h5">現在只要 {{ product.price }} 元</div>
+                  </div>
                 </td>
                 <td>
                   <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-outline-secondary">
+                    <button type="button" class="btn btn-outline-secondary" 
+                      @click="openProductModal(product.id)">
                       <i class="fas fa-spinner fa-pulse"></i>
                       查看更多
                     </button>
@@ -72,7 +79,7 @@
               </tr>
             </thead>
             <tbody>
-              <template v-if="cart.carts">
+              <!-- <template v-if="cart.carts">
                 <tr>
                   <td>
                     <button type="button" class="btn btn-outline-danger btn-sm">
@@ -100,7 +107,7 @@
                     {{  }}
                   </td>
                 </tr>
-              </template>
+              </template> -->
             </tbody>
             <tfoot>
               <tr>
@@ -115,7 +122,7 @@
           </table>
         </div>
         <div class="my-5 row justify-content-center">
-          <v-form ref="form" class="col-md-6" v-slot="{ errors }" >
+          <!-- <v-form ref="form" class="col-md-6" v-slot="{ errors }" >
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <v-field id="email" name="email" type="email" class="form-control"
@@ -153,7 +160,7 @@
               <button type="submit" class="btn btn-danger"
                       >送出訂單</button>
             </div>
-          </v-form>
+          </v-form> -->
         </div>
       </div>
     </div>
@@ -164,7 +171,7 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-dark text-white">
         <h5 class="modal-title" id="exampleModalLabel">
-          <span>{{  }}</span>
+          <span>{{ product.title }}</span>
       </h5>
         <button type="button" class="btn-close"
                 data-bs-dismiss="modal" aria-label="Close"></button>
@@ -172,7 +179,7 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-6">
-            <img class="img-fluid" :src="..." alt="">
+            <img class="img-fluid" :src="product.imageUrl" alt="">
       </div>
           <div class="col-sm-6">
             <span class="badge bg-primary rounded-pill">{{  }}</span>
@@ -210,7 +217,8 @@
     <script src="https://unpkg.com/vee-validate@next"></script>
     <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>
     <script src="https://unpkg.com/@vee-validate/rules"></script>
-    <script src="./javascript/app2.js" type="module"></script>
+    <!-- <script src="./javascript/app2.js" type="module"></script> -->
+    <script src="js/cart.js" type="module"></script>
   </body>
 
 </html>
