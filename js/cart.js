@@ -9,6 +9,7 @@ const app = createApp({
             cartData: {},//購物車列表
             products: [],//產品列表  免登入api no分頁選擇all
             productId: '',
+            isLoadingItem: '',
         }
     },
     methods: {
@@ -35,10 +36,12 @@ const app = createApp({
                 product_id: id,
                 qty,
             }
+            this.isLoadingItem = id;
             axios.post(`${apiUrl}/v2/api/${apiPath}/cart`, { data })
             .then((res) => {
               console.log(res);
               this.getCart();
+              this.isLoadingItem = '';
             })
         }
     },
