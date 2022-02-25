@@ -18,7 +18,8 @@
       <div class="container">
         <div class="mt-4">
           <!-- 產品Modal -->
-          <product-modal :id="productId" ref="productModal"></product-modal>
+          <product-modal :id="productId" ref="productModal"
+            @add-cart="addToCart"></product-modal>
           <!-- 產品Modal -->
          
           <table class="table align-middle">
@@ -71,7 +72,8 @@
           </table>
           <!-- 購物車列表 -->
           <div class="text-end">
-            <button class="btn btn-outline-danger" type="button">清空購物車</button>
+            <button class="btn btn-outline-danger" type="button"
+              @click=" deleteAllCarts()">清空購物車</button>
           </div>
           <!-- <div>
             {{ cartData }}
@@ -90,8 +92,9 @@
               <template v-if="cartData.carts">
                 <tr v-for="item in cartData.carts" :key="item.id">
                   <td>
-                    <button type="button" class="btn btn-outline-danger btn-sm">
-                      <i class="fas fa-spinner fa-pulse"></i>
+                    <button type="button" class="btn btn-outline-danger btn-sm"
+                      @click="removeCartItem(item.id)">
+                      <!-- <i class="fas fa-spinner fa-pulse"></i> -->
                       x
                     </button>
                   </td>
@@ -104,9 +107,18 @@
                   <td>
                     <div class="input-group input-group-sm">
                       <div class="input-group mb-3">
-                        <input 
+                        <!-- <input 
                              min="1" type="number" class="form-control"
-                             v-model="item.qty">
+                             v-model.number="item.qty"> -->
+                        <select id="" class="form-select" 
+                          v-model="item.qty"
+                          @change="updateCartItem(item)"
+                          :disabled="isLoadingItem === item.id"
+                        >
+                          <option :value="num" v-for="num in 20" 
+                            :key="`${num}${item.id}`"
+                          >{{ num }}</option>
+                        </select>
                         <span class="input-group-text" id="basic-addon2">
                           {{ item.product.unit }}</span>
                       </div>
@@ -124,7 +136,7 @@
                 <td colspan="3" class="text-end">總計</td>
                 <td class="text-end">{{ cartData.total }}</td>
               </tr>
-              <!-- <tr>  -------23:20-----
+              <!-- <tr>
                 <td colspan="3" class="text-end text-success">折扣價</td>
                 <td class="text-end text-success">{{  }}</td>
               </tr> -->
@@ -201,8 +213,10 @@
             <div>
               <div class="input-group">
                 <input type="number" class="form-control"
-                       min="1">
-                <button type="button" class="btn btn-primary">加入購物車</button>
+                       min="1"
+                       v-model="qty" />
+                <button type="button" class="btn btn-primary"
+                  @click="addToCart">加入購物車</button>
       </div>
       </div>
       </div>
