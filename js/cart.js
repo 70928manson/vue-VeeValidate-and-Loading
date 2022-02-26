@@ -3,14 +3,46 @@ import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue
 const apiUrl = 'https://vue3-course-api.hexschool.io'; // API平台
 const apiPath = 'manson972';  //個人 API Path
 
-const app = createApp({
+const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
+const { required, email, min, max } = VeeValidateRules;
+const { localize, loadLocaleFromURL } = VeeValidateI18n;
+
+defineRule('required', required);
+defineRule('email', email);
+defineRule('min', min);
+defineRule('max', max);
+
+// 載入多國語系
+loadLocaleFromURL('./zh_TW.json');
+
+// 設定
+configure({
+  generateMessage: localize('zh_TW'),
+  //validateOnInput: true, // 此項為true時，輸入文字就會立即進行驗證
+});
+
+const app = Vue.createApp({
     data() {
         return {
             cartData: {},//購物車列表
             products: [],//產品列表  免登入api no分頁選擇all
             productId: '',
             isLoadingItem: '',
+            form: {
+                user: {
+                    name: '',
+                    email: '',
+                    tel: '',
+                    address: '',
+                },
+                message: '',
+            }
         }
+    },
+    components: {
+        VForm: Form,
+        VField: Field,
+        ErrorMessage: ErrorMessage,
     },
     methods: {
         getProducts() {
@@ -74,6 +106,17 @@ const app = createApp({
               this.isLoadingItem = '';
             })
         },
+        createOrder() {
+            const url = `${apiUrl}/api/${apiPath}/order`;
+            const order = this.form;
+            axios.post(url, { data: order }).then((response) => {
+              alert(response.data.message);
+              this.$refs.form.resetForm();
+              this.getCart();
+            }).catch((err) => {
+              alert(err.data.message);
+            });
+          },
     },
     mounted() {
         this.getProducts();
@@ -121,5 +164,6 @@ app.component('productModal', {
         this.modal = new bootstrap.Modal(this.$refs.modal);
     }
 });
+
 
 app.mount('#app');
